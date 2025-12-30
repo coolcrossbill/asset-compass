@@ -1,0 +1,43 @@
+# Dockerfile for Ubuntu 24.04 (Noble Numbat)
+FROM ubuntu:24.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# Install system dependencies including Python 3.12 (default in Ubuntu 24.04)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3.12 \
+        python3.12-venv \
+        python3-pip \
+        postgresql-client \
+        libpq-dev \
+        build-essential \
+        && rm -rf /var/lib/apt/lists/*
+
+# Create symbolic links for python and pip
+RUN ln -sf /usr/bin/python3.12 /usr/bin/python && \
+    ln -sf /usr/bin/python3.12 /usr/bin/python3
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 8000
+
+# Run migrations and start the application
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+
