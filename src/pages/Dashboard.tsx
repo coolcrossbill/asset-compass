@@ -1,11 +1,49 @@
+import { useState, useEffect } from 'react';
 import { LayoutDashboard, Building2, Server, Monitor, Network, HardDrive, Users, Activity } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatsCard } from '@/components/ui/StatsCard';
 import { EntityLink } from '@/components/ui/EntityLink';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { datacenters, servers, hosts, ipAddresses, operatingSystems, persons } from '@/data/mockData';
+import { datacenterApi, serverApi, hostApi, ipAddressApi, osApi, personApi } from '@/services/api';
+import type { Datacenter, Server as ServerType, Host, IPAddress, OperatingSystem, Person } from '@/types/cmdb';
 
 export default function Dashboard() {
+  const [datacenters, setDatacenters] = useState<Datacenter[]>([]);
+  const [servers, setServers] = useState<ServerType[]>([]);
+  const [hosts, setHosts] = useState<Host[]>([]);
+  const [ipAddresses, setIpAddresses] = useState<IPAddress[]>([]);
+  const [operatingSystems, setOperatingSystems] = useState<OperatingSystem[]>([]);
+  const [persons, setPersons] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [dcData, srvData, hostData, ipData, osData, personData] = await Promise.all([
+          datacenterApi.getAll(),
+          serverApi.getAll(),
+          hostApi.getAll(),
+          ipAddressApi.getAll(),
+          osApi.getAll(),
+          personApi.getAll(),
+        ]);
+        setDatacenters(dcData);
+        setServers(srvData);
+        setHosts(hostData);
+        setIpAddresses(ipData);
+        setOperatingSystems(osData);
+        setPersons(personData);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const onlineServers = servers.filter(s => s.status === 'online').length;
   const runningHosts = hosts.filter(h => h.status === 'running').length;
   const assignedIps = ipAddresses.filter(ip => ip.hostId).length;
@@ -16,6 +54,21 @@ export default function Dashboard() {
     { action: 'IP assigned', target: '10.1.3.30', time: '2 days ago', type: 'static' },
     { action: 'Person added', target: 'Alex Turner', time: '3 days ago', type: 'admin' },
   ];
+
+  if (loading) {
+    return (
+      <div className="animate-fade-in">
+        <PageHeader 
+          title="Dashboard" 
+          description="Overview of your IT infrastructure"
+          icon={<LayoutDashboard className="h-6 w-6" />}
+        />
+        <div className="flex items-center justify-center h-64">
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in">

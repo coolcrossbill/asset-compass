@@ -1,6 +1,38 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: asset-compass-postgres
+    environment:
+      POSTGRES_USER: assetcompass
+      POSTGRES_PASSWORD: assetcompass
+      POSTGRES_DB: assetcompass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U assetcompass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: asset-compass-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://assetcompass:assetcompass@postgres:5432/assetcompass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
   app:
     build:
       context: .
@@ -11,4 +43,10 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
 

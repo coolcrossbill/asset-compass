@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Building2, ArrowLeft, Server, MapPin, Calendar, FileText, Users } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -6,16 +7,67 @@ import { DataTable, Column } from '@/components/ui/DataTable';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { EntityLink } from '@/components/ui/EntityLink';
 import { Button } from '@/components/ui/button';
-import { datacenters, servers, assignments, persons } from '@/data/mockData';
-import { Server as ServerType } from '@/types/cmdb';
+import { DatacenterEditDialog } from '@/components/dialogs/DatacenterEditDialog';
+import { datacenterApi, serverApi, assignmentApi, personApi } from '@/services/api';
+import { Datacenter, Server as ServerType, Assignment, Person } from '@/types/cmdb';
 
 export default function DatacenterDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const datacenter = datacenters.find(dc => dc.id === id);
-  const dcServers = servers.filter(s => s.datacenterId === id);
-  const dcAssignments = assignments.filter(a => a.entityType === 'datacenter' && a.entityId === id);
+  const [datacenter, setDatacenter] = useState<Datacenter | null>(null);
+  const [dcServers, setDcServers] = useState<ServerType[]>([]);
+  const [dcAssignments, setDcAssignments] = useState<Assignment[]>([]);
+  const [persons, setPersons] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  const fetchData = async () => {
+    if (!id) return;
+    
+    try {
+      setLoading(true);
+      const [dcData, serversData, assignmentsData, personsData] = await Promise.all([
+        datacenterApi.getById(id),
+        serverApi.getAll(),
+        assignmentApi.getAll(),
+        personApi.getAll(),
+      ]);
+      
+      setDatacenter(dcData);
+      setDcServers(serversData.filter(s => s.datacenterId === id));
+      setDcAssignments(assignmentsData.filter(a => a.entityType === 'datacenter' && a.entityId === id));
+      setPersons(personsData);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch data');
+      console.error('Error fetching datacenter details:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <p className="text-destructive">Error: {error}</p>
+        <Button onClick={() => navigate('/datacenters')}>Back to Datacenters</Button>
+      </div>
+    );
+  }
 
   if (!datacenter) {
     return (
@@ -61,11 +113,20 @@ export default function DatacenterDetail() {
         icon={<Building2 className="h-6 w-6" />}
         actions={
           <div className="flex gap-2">
-            <Button variant="outline">Edit</Button>
+            <Button variant="outline" onClick={() => setEditDialogOpen(true)}>Edit</Button>
             <Button variant="destructive">Delete</Button>
           </div>
         }
       />
+
+      {datacenter && (
+        <DatacenterEditDialog
+          datacenter={datacenter}
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          onSuccess={fetchData}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <DetailCard title="Details" icon={<FileText className="h-4 w-4" />}>

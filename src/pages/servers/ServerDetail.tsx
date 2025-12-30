@@ -1,22 +1,111 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Server, ArrowLeft, Monitor, Building2, FileText, Hash, Users } from 'lucide-react';
+import { Server, ArrowLeft, Monitor, Building2, FileText, Users } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { DetailCard, DetailRow } from '@/components/ui/DetailCard';
 import { DataTable, Column } from '@/components/ui/DataTable';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { EntityLink } from '@/components/ui/EntityLink';
 import { Button } from '@/components/ui/button';
-import { servers, hosts, assignments, persons, datacenters } from '@/data/mockData';
-import { Host } from '@/types/cmdb';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { ServerEditDialog } from '@/components/dialogs/ServerEditDialog';
+import { serverApi, hostApi, assignmentApi, personApi, datacenterApi } from '@/services/api';
+import { Server as ServerType, Host, Assignment, Person, Datacenter } from '@/types/cmdb';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ServerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
-  const server = servers.find(s => s.id === id);
-  const serverHosts = hosts.filter(h => h.serverId === id);
-  const serverAssignments = assignments.filter(a => a.entityType === 'server' && a.entityId === id);
-  const datacenter = datacenters.find(dc => dc.id === server?.datacenterId);
+  const [server, setServer] = useState<ServerType | null>(null);
+  const [serverHosts, setServerHosts] = useState<Host[]>([]);
+  const [serverAssignments, setServerAssignments] = useState<Assignment[]>([]);
+  const [persons, setPersons] = useState<Person[]>([]);
+  const [datacenter, setDatacenter] = useState<Datacenter | null>(null);
+  const [datacenters, setDatacenters] = useState<Datacenter[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const fetchData = async () => {
+    if (!id) return;
+    
+    try {
+      setLoading(true);
+      const [serverData, hostsData, assignmentsData, personsData, datacentersData] = await Promise.all([
+        serverApi.getById(id),
+        hostApi.getAll(),
+        assignmentApi.getAll(),
+        personApi.getAll(),
+        datacenterApi.getAll(),
+      ]);
+      
+      setServer(serverData);
+      setServerHosts(hostsData.filter(h => h.serverId === id));
+      setServerAssignments(assignmentsData.filter(a => a.entityType === 'server' && a.entityId === id));
+      setPersons(personsData);
+      setDatacenters(datacentersData);
+      
+      if (serverData.datacenterId) {
+        const dcData = datacentersData.find(dc => dc.id === serverData.datacenterId);
+        setDatacenter(dcData || null);
+      }
+      
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch data');
+      console.error('Error fetching server details:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
+
+  const handleDelete = async () => {
+    if (!id) return;
+    
+    try {
+      setDeleting(true);
+      await serverApi.delete(id);
+      toast({
+        title: "Server deleted",
+        description: "The server has been successfully deleted.",
+      });
+      navigate('/servers');
+    } catch (err) {
+      toast({
+        title: "Delete failed",
+        description: err instanceof Error ? err.message : 'Failed to delete server',
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <p className="text-destructive">Error: {error}</p>
+        <Button onClick={() => navigate('/servers')}>Back to Servers</Button>
+      </div>
+    );
+  }
 
   if (!server) {
     return (
@@ -67,10 +156,36 @@ export default function ServerDetail() {
         actions={
           <div className="flex gap-2">
             <StatusBadge status={server.status} />
-            <Button variant="outline">Edit</Button>
-            <Button variant="destructive">Delete</Button>
+            <Button variant="outline" onClick={() => setEditDialogOpen(true)}>Edit</Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => setDeleteDialogOpen(true)}
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </Button>
           </div>
         }
+      />
+
+      {server && (
+        <ServerEditDialog
+          server={server}
+          datacenters={datacenters}
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          onSuccess={fetchData}
+        />
+      )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+        title="Delete Server"
+        description={`Are you sure you want to delete ${server.hostname}? This action cannot be undone.`}
+        confirmText="Delete"
+        variant="destructive"
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">

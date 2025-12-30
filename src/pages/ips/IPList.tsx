@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Network, Plus } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -5,11 +6,37 @@ import { DataTable, Column } from '@/components/ui/DataTable';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { EntityLink } from '@/components/ui/EntityLink';
 import { Button } from '@/components/ui/button';
-import { ipAddresses } from '@/data/mockData';
-import { IPAddress } from '@/types/cmdb';
+import { ipAddressApi, hostApi } from '@/services/api';
+import { IPAddress, Host } from '@/types/cmdb';
 
 export default function IPList() {
   const navigate = useNavigate();
+  const [ipAddresses, setIpAddresses] = useState<IPAddress[]>([]);
+  const [hosts, setHosts] = useState<Host[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [ipData, hostsData] = await Promise.all([
+          ipAddressApi.getAll(),
+          hostApi.getAll(),
+        ]);
+        setIpAddresses(ipData);
+        setHosts(hostsData);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch data');
+        console.error('Error fetching IP addresses:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns: Column<IPAddress>[] = [
     { 
@@ -21,32 +48,49 @@ export default function IPList() {
       )
     },
     { 
+      key: 'hostHostname', 
+      header: 'Host',
+      render: (ip) => {
+        const host = hosts.find(h => h.id === ip.hostId);
+        return ip.hostId && host ? (
+          <EntityLink to={`/hosts/${ip.hostId}`}>{host.hostname}</EntityLink>
+        ) : '-';
+      }
+    },
+    { 
       key: 'type', 
       header: 'Type',
       render: (ip) => <StatusBadge status={ip.type} />
     },
     { 
       key: 'allocation', 
-      header: 'Allocation',
+      header: 'Allocation', 
+      sortable: true,
       render: (ip) => <StatusBadge status={ip.allocation} />
     },
-    { 
-      key: 'hostHostname', 
-      header: 'Assigned Host',
-      render: (ip) => ip.hostId ? (
-        <EntityLink to={`/hosts/${ip.hostId}`}>
-          {ip.hostHostname}
-        </EntityLink>
-      ) : <span className="text-muted-foreground">Unassigned</span>
-    },
-    { key: 'createdAt', header: 'Created', sortable: true },
   ];
+
+  if (error) {
+    return (
+      <div className="animate-fade-in">
+        <PageHeader 
+          title="IP Addresses" 
+          description="Manage IP address allocations"
+          icon={<Network className="h-6 w-6" />}
+        />
+        <div className="flex flex-col items-center justify-center h-64 gap-4">
+          <p className="text-destructive">Error: {error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in">
       <PageHeader 
         title="IP Addresses" 
-        description="Manage IP address allocation"
+        description="Manage IP address allocations"
         icon={<Network className="h-6 w-6" />}
         actions={
           <Button className="gap-2">
@@ -59,10 +103,10 @@ export default function IPList() {
       <DataTable 
         data={ipAddresses}
         columns={columns}
-        searchKeys={['address', 'hostHostname']}
-        searchPlaceholder="Search by IP or hostname..."
+        searchKeys={['address']}
+        searchPlaceholder="Search by IP address..."
         onRowClick={(ip) => navigate(`/ips/${ip.id}`)}
-        emptyMessage="No IP addresses found"
+        emptyMessage={loading ? "Loading..." : "No IP addresses found"}
       />
     </div>
   );
