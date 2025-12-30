@@ -3,9 +3,15 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+# Support for Debian, Ubuntu, and Alpine
+RUN if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then \
+        apt-get update && \
+        apt-get install -y --no-install-recommends \
+            postgresql-client \
+            && rm -rf /var/lib/apt/lists/*; \
+    elif [ -f /etc/alpine-release ]; then \
+        apk add --no-cache postgresql-client; \
+    fi
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
