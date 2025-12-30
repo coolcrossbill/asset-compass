@@ -6,14 +6,19 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 
 - `index.html` - Main HTML structure (English)
 - `index-ru.html` - Russian translation
+- `index-ja.html` - Japanese translation (kawaii edition ✨)
 - `style.css` - Complete styling with responsive design
 - `script.js` - Interactive functionality and animations
 - `Dockerfile` - Docker container configuration
 - `docker-compose.yml` - Docker Compose orchestration
 - `nginx.conf` - Nginx web server configuration
 - `.dockerignore` - Docker build exclusions
-- `README.md` - This file
-- `DOCKER_QUICKSTART.md` - Quick Docker guide
+- `README.md` - This file (complete documentation)
+- `QUICK_START.md` - Fast getting started guide
+- `DOCKER_QUICKSTART.md` - Quick Docker reference
+- `LANGUAGES.md` - Multi-language support documentation
+- `KAWAII_FEATURES.md` - Guide to kawaii design in Japanese version
+- `LANGUAGE_COMPARISON.md` - Side-by-side translation comparison
 
 ## 🚀 Features
 
@@ -22,7 +27,7 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 - **Fully responsive** - works on desktop, tablet, and mobile
 - **Smooth animations** and transitions
 - **Accessible** with keyboard navigation support
-- **Multi-language support** - English and Russian versions with language switcher
+- **Multi-language support** - English, Russian, and Japanese (kawaii edition ✨) with language switcher
 
 ### Sections
 1. **Navigation Bar** - Fixed header with mobile menu
@@ -90,6 +95,7 @@ Then visit: `http://localhost:7070`
 Available in multiple languages:
 - 🇬🇧 English: `http://localhost:7070/`
 - 🇷🇺 Russian: `http://localhost:7070/index-ru.html`
+- 🇯🇵 Japanese (Kawaii): `http://localhost:7070/index-ja.html`
 
 To stop:
 ```bash

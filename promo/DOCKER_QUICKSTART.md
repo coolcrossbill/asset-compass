@@ -12,6 +12,7 @@ Visit: **http://localhost:7070**
 Available in multiple languages:
 - 🇬🇧 English: http://localhost:7070/
 - 🇷🇺 Russian: http://localhost:7070/index-ru.html
+- 🇯🇵 Japanese (Kawaii Edition ✨): http://localhost:7070/index-ja.html
 
 That's it! 🎉
 

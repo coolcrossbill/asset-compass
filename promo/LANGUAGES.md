@@ -12,11 +12,17 @@ Asset Compass promo site is available in multiple languages.
 - **File**: `index-ru.html`
 - **URL**: `http://localhost:7070/index-ru.html`
 
+### 🇯🇵 日本語 (Japanese - Kawaii Edition ✨)
+- **File**: `index-ja.html`
+- **URL**: `http://localhost:7070/index-ja.html`
+- **Special Features**: Cute emojis, friendly tone, kawaii design touches
+
 ## Language Switcher
 
-Both versions include a language switcher in the navigation menu:
-- English version shows: **🇷🇺 RU** link to switch to Russian
-- Russian version shows: **🇬🇧 EN** link to switch to English
+All versions include a language switcher in the navigation menu:
+- English version shows: **🇷🇺 RU** and **🇯🇵 JP** links
+- Russian version shows: **🇬🇧 EN** and **🇯🇵 JP** links
+- Japanese version shows: **🇬🇧 EN** and **🇷🇺 RU** links
 
 ## Translation Coverage
 
@@ -105,6 +111,26 @@ To add a new language:
    docker-compose up -d --build
    ```
 
+## Kawaii Japanese Version 🌸
+
+The Japanese version (`index-ja.html`) features a special **kawaii (cute)** design approach:
+
+### Kawaii Features:
+- ✨ **Abundant emojis** throughout the interface
+- 💖 **Softer, friendlier language** in headings and descriptions
+- 🎀 **Cute icons** integrated into text (sparkles ✨, hearts 💖, stars ⭐)
+- 🌈 **Playful tone** while maintaining professionalism
+- 📦 **Emoji bullets** in feature lists
+- 💝 **Warm, welcoming CTA messages**
+
+### Examples of Kawaii Touches:
+- "IT インフラを楽しく管理 🌈" (Manage IT infrastructure joyfully)
+- Navigation: "機能 🌟" "メリット 💝" "料金プラン 💰"
+- Stats: "10K+ 📊" "99.9% 🎯" "500+ 💖"
+- Footer: "Made with 💖"
+
+This approach makes the technical content more approachable and friendly for Japanese users who appreciate kawaii culture!
+
 ## Language Code Examples
 
 Common language codes for future additions:
@@ -114,7 +140,6 @@ Common language codes for future additions:
 - `index-it.html` - Italian (Italiano) 🇮🇹
 - `index-pt.html` - Portuguese (Português) 🇵🇹
 - `index-zh.html` - Chinese (中文) 🇨🇳
-- `index-ja.html` - Japanese (日本語) 🇯🇵
 - `index-ko.html` - Korean (한국어) 🇰🇷
 
 ## SEO Considerations
@@ -125,14 +150,22 @@ For production deployment, consider:
    ```html
    <link rel="alternate" hreflang="en" href="https://yoursite.com/" />
    <link rel="alternate" hreflang="ru" href="https://yoursite.com/index-ru.html" />
+   <link rel="alternate" hreflang="ja" href="https://yoursite.com/index-ja.html" />
    ```
 
 2. **Update meta descriptions** for each language
 
 3. **Add language-specific Open Graph tags**:
    ```html
+   <!-- For Russian page -->
    <meta property="og:locale" content="ru_RU" />
    <meta property="og:locale:alternate" content="en_US" />
+   <meta property="og:locale:alternate" content="ja_JP" />
+   
+   <!-- For Japanese page -->
+   <meta property="og:locale" content="ja_JP" />
+   <meta property="og:locale:alternate" content="en_US" />
+   <meta property="og:locale:alternate" content="ru_RU" />
    ```
 
 4. **Consider URL structure**:
@@ -142,7 +175,7 @@ For production deployment, consider:
 
 ## Testing
 
-Test both versions:
+Test all versions:
 
 ```bash
 # Start the site
@@ -154,9 +187,13 @@ curl http://localhost:7070/ | grep -i "Navigate Your IT"
 # Test Russian version
 curl http://localhost:7070/index-ru.html | grep -i "Управляйте"
 
+# Test Japanese version (kawaii check!)
+curl http://localhost:7070/index-ja.html | grep "✨"
+
 # Test in browser
-open http://localhost:7070/         # English
-open http://localhost:7070/index-ru.html  # Russian
+open http://localhost:7070/              # English
+open http://localhost:7070/index-ru.html # Russian
+open http://localhost:7070/index-ja.html # Japanese (Kawaii)
 ```
 
 ## Shared Resources
