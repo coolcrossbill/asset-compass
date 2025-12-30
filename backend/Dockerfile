@@ -4,14 +4,21 @@ WORKDIR /app
 
 # Install system dependencies
 # Support for Debian, Ubuntu, and Alpine
-RUN if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then \
-        apt-get update && \
-        apt-get install -y --no-install-recommends \
-            postgresql-client \
-            && rm -rf /var/lib/apt/lists/*; \
-    elif [ -f /etc/alpine-release ]; then \
-        apk add --no-cache postgresql-client; \
-    fi
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt \
+    apt-get update && \
+    apt-get install --no-install-recommends -y libpq-dev curl gnupg2 lsb-release apt-transport-https ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add the PGDG apt repo
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+# Trust the PGDG gpg key
+RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc| gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        postgresql-client \
+        && rm -rf /var/lib/apt/lists/*; 
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
