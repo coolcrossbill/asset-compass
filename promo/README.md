@@ -7,6 +7,10 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 - `index.html` - Main HTML structure
 - `style.css` - Complete styling with responsive design
 - `script.js` - Interactive functionality and animations
+- `Dockerfile` - Docker container configuration
+- `docker-compose.yml` - Docker Compose orchestration
+- `nginx.conf` - Nginx web server configuration
+- `.dockerignore` - Docker build exclusions
 - `README.md` - This file
 
 ## 🚀 Features
@@ -64,7 +68,30 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 
 ## 🌐 How to Use
 
-### Option 1: Direct File Access
+### Option 1: Docker (Recommended) 🐳
+The easiest way to run the promo site using Docker:
+
+```bash
+cd app/promo
+
+# Build and run with docker-compose
+docker-compose up -d
+
+# Or build and run manually
+docker build -t asset-compass-promo .
+docker run -d -p 8080:80 --name promo asset-compass-promo
+```
+
+Then visit: `http://localhost:8080`
+
+To stop:
+```bash
+docker-compose down
+# or
+docker stop promo && docker rm promo
+```
+
+### Option 2: Direct File Access
 Simply open `index.html` in any modern web browser:
 
 ```bash
@@ -76,7 +103,7 @@ xdg-open index.html  # Linux
 start index.html  # Windows
 ```
 
-### Option 2: Local Web Server
+### Option 3: Local Web Server
 For best results, serve via a local web server:
 
 ```bash
@@ -93,7 +120,7 @@ php -S localhost:8080 -t app/promo
 
 Then visit: `http://localhost:8080`
 
-### Option 3: Deploy to Production
+### Option 4: Deploy to Production
 Deploy the `promo/` folder to any static hosting service:
 
 - **Netlify**: Drag & drop the folder
@@ -154,12 +181,16 @@ Customize behavior in `script.js`:
 - **CSS Grid & Flexbox** - Modern layouts
 - **CSS Custom Properties** - Easy theming
 - **Intersection Observer API** - Scroll animations
+- **Docker** - Containerized deployment
+- **Nginx Alpine** - Lightweight web server (~23MB image)
 
 ### Performance
 - ⚡ No external dependencies
 - ⚡ Minimal file size (~15KB total)
 - ⚡ Fast page load times
 - ⚡ Optimized animations
+- ⚡ Gzip compression enabled
+- ⚡ Static asset caching (1 year)
 
 ### Accessibility
 - ♿ Semantic HTML
@@ -167,6 +198,48 @@ Customize behavior in `script.js`:
 - ♿ Keyboard navigation support
 - ♿ Focus indicators
 - ♿ Responsive text sizing
+
+## 🐳 Docker Details
+
+### Container Information
+- **Base Image**: nginx:alpine (~23MB)
+- **Port**: 80 (mapped to 8080 on host)
+- **Health Check**: Built-in endpoint at `/health`
+- **Restart Policy**: Unless stopped manually
+
+### Docker Commands
+
+```bash
+# Build the image
+docker build -t asset-compass-promo .
+
+# Run container
+docker run -d -p 8080:80 --name promo asset-compass-promo
+
+# View logs
+docker logs promo
+
+# Check health status
+docker ps
+curl http://localhost:8080/health
+
+# Stop and remove
+docker stop promo && docker rm promo
+
+# Using docker-compose
+docker-compose up -d          # Start
+docker-compose logs -f        # View logs
+docker-compose ps             # Check status
+docker-compose down           # Stop and remove
+```
+
+### Production Deployment
+The Docker setup is production-ready with:
+- ✅ Security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection)
+- ✅ Gzip compression for faster loads
+- ✅ Static asset caching (1 year expiry)
+- ✅ Health check endpoint for monitoring
+- ✅ Graceful restart policy
 
 ## 📝 TODO (Optional Enhancements)
 
@@ -178,6 +251,8 @@ Customize behavior in `script.js`:
 - [ ] Implement live chat widget
 - [ ] Add analytics tracking (Google Analytics, etc.)
 - [ ] A/B testing variations
+- [ ] SSL/TLS certificate setup for HTTPS
+- [ ] CDN integration for global distribution
 
 ## 📄 License
 
