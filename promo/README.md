@@ -4,7 +4,8 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 
 ## 📁 Files
 
-- `index.html` - Main HTML structure
+- `index.html` - Main HTML structure (English)
+- `index-ru.html` - Russian translation
 - `style.css` - Complete styling with responsive design
 - `script.js` - Interactive functionality and animations
 - `Dockerfile` - Docker container configuration
@@ -12,6 +13,7 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 - `nginx.conf` - Nginx web server configuration
 - `.dockerignore` - Docker build exclusions
 - `README.md` - This file
+- `DOCKER_QUICKSTART.md` - Quick Docker guide
 
 ## 🚀 Features
 
@@ -20,6 +22,7 @@ A professional, responsive promotional landing page with pricing tiers for Asset
 - **Fully responsive** - works on desktop, tablet, and mobile
 - **Smooth animations** and transitions
 - **Accessible** with keyboard navigation support
+- **Multi-language support** - English and Russian versions with language switcher
 
 ### Sections
 1. **Navigation Bar** - Fixed header with mobile menu
@@ -79,10 +82,14 @@ docker-compose up -d
 
 # Or build and run manually
 docker build -t asset-compass-promo .
-docker run -d -p 8080:80 --name promo asset-compass-promo
+docker run -d -p 7070:80 --name promo asset-compass-promo
 ```
 
-Then visit: `http://localhost:8080`
+Then visit: `http://localhost:7070`
+
+Available in multiple languages:
+- 🇬🇧 English: `http://localhost:7070/`
+- 🇷🇺 Russian: `http://localhost:7070/index-ru.html`
 
 To stop:
 ```bash
@@ -109,16 +116,16 @@ For best results, serve via a local web server:
 ```bash
 # Using Python 3
 cd app/promo
-python -m http.server 8080
+python -m http.server 7070
 
 # Using Node.js (http-server)
-npx http-server app/promo -p 8080
+npx http-server app/promo -p 7070
 
 # Using PHP
-php -S localhost:8080 -t app/promo
+php -S localhost:7070 -t app/promo
 ```
 
-Then visit: `http://localhost:8080`
+Then visit: `http://localhost:7070`
 
 ### Option 4: Deploy to Production
 Deploy the `promo/` folder to any static hosting service:
@@ -203,7 +210,7 @@ Customize behavior in `script.js`:
 
 ### Container Information
 - **Base Image**: nginx:alpine (~23MB)
-- **Port**: 80 (mapped to 8080 on host)
+- **Port**: 80 (mapped to 7070 on host)
 - **Health Check**: Built-in endpoint at `/health`
 - **Restart Policy**: Unless stopped manually
 
@@ -214,14 +221,14 @@ Customize behavior in `script.js`:
 docker build -t asset-compass-promo .
 
 # Run container
-docker run -d -p 8080:80 --name promo asset-compass-promo
+docker run -d -p 7070:80 --name promo asset-compass-promo
 
 # View logs
 docker logs promo
 
 # Check health status
 docker ps
-curl http://localhost:8080/health
+curl http://localhost:7070/health
 
 # Stop and remove
 docker stop promo && docker rm promo

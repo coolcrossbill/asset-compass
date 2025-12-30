@@ -7,7 +7,11 @@ cd app/promo
 docker-compose up -d
 ```
 
-Visit: **http://localhost:8080**
+Visit: **http://localhost:7070**
+
+Available in multiple languages:
+- 🇬🇧 English: http://localhost:7070/
+- 🇷🇺 Russian: http://localhost:7070/index-ru.html
 
 That's it! 🎉
 
@@ -16,7 +20,7 @@ That's it! 🎉
 Docker Compose just:
 - ✅ Built a lightweight nginx container (~23MB)
 - ✅ Copied your HTML/CSS/JS files into it
-- ✅ Started the web server on port 8080
+- ✅ Started the web server on port 7070
 - ✅ Configured health checks and restart policies
 - ✅ Enabled gzip compression and caching
 
@@ -56,7 +60,7 @@ If you prefer not to use docker-compose:
 docker build -t asset-compass-promo .
 
 # Run
-docker run -d -p 8080:80 --name promo asset-compass-promo
+docker run -d -p 7070:80 --name promo asset-compass-promo
 
 # Stop
 docker stop promo && docker rm promo
@@ -67,7 +71,7 @@ docker stop promo && docker rm promo
 Check if the container is healthy:
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:7070/health
 # Should return: healthy
 ```
 
@@ -80,11 +84,11 @@ docker ps
 
 ## Port Configuration
 
-By default, the site runs on **port 8080**. To change it, edit `docker-compose.yml`:
+By default, the site runs on **port 7070**. To change it, edit `docker-compose.yml`:
 
 ```yaml
 ports:
-  - "3000:80"  # Change 8080 to your preferred port
+  - "3000:80"  # Change 7070 to your preferred port
 ```
 
 ## Production Deployment
