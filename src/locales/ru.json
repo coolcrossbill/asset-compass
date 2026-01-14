@@ -21,7 +21,33 @@
     "type": "Тип",
     "location": "Расположение",
     "noData": "Нет данных",
-    "notFound": "Не найдено"
+    "notFound": "Не найдено",
+    "retry": "Повторить",
+    "add": "Добавить",
+    "model": "Модель",
+    "serialNumber": "Серийный номер",
+    "created": "Создано",
+    "lastUpdated": "Последнее обновление",
+    "online": "Онлайн",
+    "offline": "Офлайн",
+    "maintenance": "Обслуживание",
+    "statistics": "Статистика",
+    "assignedPersons": "Назначенные персоны",
+    "noPersonsAssigned": "Нет назначенных персон",
+    "backTo": "Вернуться к",
+    "notFoundMessage": "Не найдено",
+    "pageNotFound": "Страница не найдена",
+    "returnHome": "Вернуться на главную",
+    "email": "Email",
+    "phone": "Телефон",
+    "role": "Роль",
+    "department": "Отдел",
+    "assignments": "Назначения",
+    "resources": "Ресурсы",
+    "allocation": "Распределение",
+    "eolDate": "Дата окончания поддержки",
+    "hostname": "Имя хоста",
+    "os": "ОС"
   },
   "navigation": {
     "dashboard": "Панель управления",
@@ -57,7 +83,12 @@
     "location": "Расположение",
     "servers": "Серверы",
     "totalServers": "Всего серверов",
-    "noServers": "Нет серверов в этом дата-центре"
+    "noServers": "Нет серверов в этом дата-центре",
+    "description": "Управление дата-центрами",
+    "addDatacenter": "Добавить дата-центр",
+    "searchPlaceholder": "Поиск дата-центров...",
+    "emptyMessage": "Дата-центры не найдены",
+    "backToDatacenters": "Вернуться к дата-центрам"
   },
   "servers": {
     "title": "Серверы",
@@ -72,7 +103,12 @@
     "status": "Статус",
     "online": "Онлайн",
     "offline": "Офлайн",
-    "maintenance": "Обслуживание"
+    "maintenance": "Обслуживание",
+    "description": "Управление физическими серверами в дата-центрах",
+    "addServer": "Добавить сервер",
+    "searchPlaceholder": "Поиск по имени хоста, серийному номеру или модели...",
+    "emptyMessage": "Серверы не найдены",
+    "hosts": "Хосты"
   },
   "hosts": {
     "title": "Хосты / ВМ",
@@ -86,7 +122,12 @@
     "status": "Статус",
     "running": "Работает",
     "stopped": "Остановлен",
-    "suspended": "Приостановлен"
+    "suspended": "Приостановлен",
+    "description": "Управление виртуальными машинами и контейнерами",
+    "addHost": "Добавить хост",
+    "searchPlaceholder": "Поиск по имени хоста...",
+    "emptyMessage": "Хосты не найдены",
+    "ipAddresses": "IP-адреса"
   },
   "ipAddresses": {
     "title": "IP-адреса",
@@ -98,7 +139,11 @@
     "address": "IP-адрес",
     "host": "Хост",
     "assigned": "Назначен",
-    "available": "Доступен"
+    "available": "Доступен",
+    "description": "Управление распределением IP-адресов",
+    "addIPAddress": "Добавить IP-адрес",
+    "searchPlaceholder": "Поиск по IP-адресу...",
+    "emptyMessage": "IP-адреса не найдены"
   },
   "operatingSystems": {
     "title": "Операционные системы",
@@ -109,7 +154,12 @@
     "delete": "Удалить ОС",
     "name": "Название",
     "version": "Версия",
-    "vendor": "Производитель"
+    "vendor": "Производитель",
+    "description": "Управление типами операционных систем",
+    "addOS": "Добавить ОС",
+    "searchPlaceholder": "Поиск по названию, версии или производителю...",
+    "emptyMessage": "Операционные системы не найдены",
+    "hosts": "Хосты"
   },
   "persons": {
     "title": "Персоны",
@@ -122,11 +172,20 @@
     "lastName": "Фамилия",
     "email": "Email",
     "phone": "Телефон",
-    "role": "Роль"
+    "role": "Роль",
+    "description": "Управление людьми и их ролями",
+    "addPerson": "Добавить персону",
+    "searchPlaceholder": "Поиск по имени, email, роли или отделу...",
+    "emptyMessage": "Персоны не найдены"
   },
   "language": {
     "switch": "Переключить язык",
     "russian": "Русский",
     "english": "English"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Упс! Страница не найдена",
+    "returnHome": "Вернуться на главную"
   }
 }

@@ -10,8 +10,10 @@ import { Button } from '@/components/ui/button';
 import { DatacenterEditDialog } from '@/components/dialogs/DatacenterEditDialog';
 import { datacenterApi, serverApi, assignmentApi, personApi } from '@/services/api';
 import { Datacenter, Server as ServerType, Assignment, Person } from '@/types/cmdb';
+import { useTranslation } from 'react-i18next';
 
 export default function DatacenterDetail() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -55,7 +57,7 @@ export default function DatacenterDetail() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
-        <p className="text-muted-foreground">Loading...</p>
+        <p className="text-muted-foreground">{t('common.loading')}</p>
       </div>
     );
   }
@@ -63,8 +65,8 @@ export default function DatacenterDetail() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <p className="text-destructive">Error: {error}</p>
-        <Button onClick={() => navigate('/datacenters')}>Back to Datacenters</Button>
+        <p className="text-destructive">{t('common.error')}: {error}</p>
+        <Button onClick={() => navigate('/datacenters')}>{t('datacenters.backToDatacenters')}</Button>
       </div>
     );
   }
@@ -72,9 +74,9 @@ export default function DatacenterDetail() {
   if (!datacenter) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
-        <p className="text-muted-foreground">Datacenter not found</p>
+        <p className="text-muted-foreground">{t('common.notFoundMessage')}</p>
         <Button variant="link" onClick={() => navigate('/datacenters')}>
-          Back to Datacenters
+          {t('datacenters.backToDatacenters')}
         </Button>
       </div>
     );
@@ -83,15 +85,15 @@ export default function DatacenterDetail() {
   const serverColumns: Column<ServerType>[] = [
     { 
       key: 'hostname', 
-      header: 'Hostname',
+      header: t('common.hostname'),
       render: (srv) => (
         <EntityLink to={`/servers/${srv.id}`}>{srv.hostname}</EntityLink>
       )
     },
-    { key: 'model', header: 'Model' },
+    { key: 'model', header: t('common.model') },
     { 
       key: 'status', 
-      header: 'Status',
+      header: t('common.status'),
       render: (srv) => <StatusBadge status={srv.status} />
     },
   ];
@@ -104,7 +106,7 @@ export default function DatacenterDetail() {
         onClick={() => navigate('/datacenters')}
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Datacenters
+        {t('datacenters.backToDatacenters')}
       </Button>
 
       <PageHeader 
@@ -113,8 +115,8 @@ export default function DatacenterDetail() {
         icon={<Building2 className="h-6 w-6" />}
         actions={
           <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setEditDialogOpen(true)}>Edit</Button>
-            <Button variant="destructive">Delete</Button>
+            <Button variant="outline" onClick={() => setEditDialogOpen(true)}>{t('common.edit')}</Button>
+            <Button variant="destructive">{t('common.delete')}</Button>
           </div>
         }
       />
@@ -129,10 +131,10 @@ export default function DatacenterDetail() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <DetailCard title="Details" icon={<FileText className="h-4 w-4" />}>
-          <DetailRow label="Name" value={datacenter.name} />
+        <DetailCard title={t('common.details')} icon={<FileText className="h-4 w-4" />}>
+          <DetailRow label={t('common.name')} value={datacenter.name} />
           <DetailRow 
-            label="Location" 
+            label={t('common.location')} 
             value={
               <span className="flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
@@ -141,7 +143,7 @@ export default function DatacenterDetail() {
             } 
           />
           <DetailRow 
-            label="Created" 
+            label={t('common.created')} 
             value={
               <span className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
@@ -149,19 +151,19 @@ export default function DatacenterDetail() {
               </span>
             } 
           />
-          <DetailRow label="Last Updated" value={datacenter.updatedAt} />
+          <DetailRow label={t('common.lastUpdated')} value={datacenter.updatedAt} />
         </DetailCard>
 
-        <DetailCard title="Statistics" icon={<Server className="h-4 w-4" />}>
-          <DetailRow label="Total Servers" value={dcServers.length} />
-          <DetailRow label="Online" value={dcServers.filter(s => s.status === 'online').length} />
-          <DetailRow label="Maintenance" value={dcServers.filter(s => s.status === 'maintenance').length} />
-          <DetailRow label="Offline" value={dcServers.filter(s => s.status === 'offline').length} />
+        <DetailCard title={t('common.statistics')} icon={<Server className="h-4 w-4" />}>
+          <DetailRow label={t('datacenters.totalServers')} value={dcServers.length} />
+          <DetailRow label={t('common.online')} value={dcServers.filter(s => s.status === 'online').length} />
+          <DetailRow label={t('common.maintenance')} value={dcServers.filter(s => s.status === 'maintenance').length} />
+          <DetailRow label={t('common.offline')} value={dcServers.filter(s => s.status === 'offline').length} />
         </DetailCard>
 
-        <DetailCard title="Assigned Persons" icon={<Users className="h-4 w-4" />}>
+        <DetailCard title={t('common.assignedPersons')} icon={<Users className="h-4 w-4" />}>
           {dcAssignments.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No persons assigned</p>
+            <p className="text-sm text-muted-foreground">{t('common.noPersonsAssigned')}</p>
           ) : (
             dcAssignments.map(a => {
               const person = persons.find(p => p.id === a.personId);
@@ -177,14 +179,14 @@ export default function DatacenterDetail() {
         </DetailCard>
       </div>
 
-      <DetailCard title="Servers" icon={<Server className="h-4 w-4" />} className="mt-6">
+      <DetailCard title={t('datacenters.servers')} icon={<Server className="h-4 w-4" />} className="mt-6">
         <DataTable 
           data={dcServers}
           columns={serverColumns}
           searchKeys={['hostname']}
-          searchPlaceholder="Search servers..."
+          searchPlaceholder={t('servers.searchPlaceholder')}
           onRowClick={(srv) => navigate(`/servers/${srv.id}`)}
-          emptyMessage="No servers in this datacenter"
+          emptyMessage={t('datacenters.noServers')}
         />
       </DetailCard>
     </div>

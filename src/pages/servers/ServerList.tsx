@@ -8,8 +8,10 @@ import { EntityLink } from '@/components/ui/EntityLink';
 import { Button } from '@/components/ui/button';
 import { serverApi, hostApi, datacenterApi } from '@/services/api';
 import { Server as ServerType, Host, Datacenter } from '@/types/cmdb';
+import { useTranslation } from 'react-i18next';
 
 export default function ServerList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [servers, setServers] = useState<ServerType[]>([]);
   const [hosts, setHosts] = useState<Host[]>([]);
@@ -44,7 +46,7 @@ export default function ServerList() {
   const columns: Column<ServerType>[] = [
     { 
       key: 'hostname', 
-      header: 'Hostname', 
+      header: t('common.hostname'), 
       sortable: true,
       render: (srv) => (
         <span className="font-medium font-mono text-foreground">{srv.hostname}</span>
@@ -52,7 +54,7 @@ export default function ServerList() {
     },
     { 
       key: 'datacenterName', 
-      header: 'Datacenter',
+      header: t('servers.datacenter'),
       render: (srv) => {
         const dc = datacenters.find(d => d.id === srv.datacenterId);
         return (
@@ -62,15 +64,15 @@ export default function ServerList() {
         );
       }
     },
-    { key: 'model', header: 'Model', sortable: true },
+    { key: 'model', header: t('common.model'), sortable: true },
     { 
       key: 'serialNumber', 
-      header: 'Serial #',
+      header: t('common.serialNumber'),
       render: (srv) => <span className="font-mono text-muted-foreground">{srv.serialNumber}</span>
     },
     { 
       key: 'hosts', 
-      header: 'Hosts',
+      header: t('servers.hosts'),
       render: (srv) => {
         const hostCount = hosts.filter(h => h.serverId === srv.id).length;
         return <span className="text-muted-foreground">{hostCount}</span>;
@@ -78,7 +80,7 @@ export default function ServerList() {
     },
     { 
       key: 'status', 
-      header: 'Status', 
+      header: t('common.status'), 
       sortable: true,
       render: (srv) => <StatusBadge status={srv.status} />
     },
@@ -88,13 +90,13 @@ export default function ServerList() {
     return (
       <div className="animate-fade-in">
         <PageHeader 
-          title="Servers" 
-          description="Manage physical servers across datacenters"
+          title={t('servers.title')} 
+          description={t('servers.description')}
           icon={<Server className="h-6 w-6" />}
         />
         <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <p className="text-destructive">Error: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="text-destructive">{t('common.error')}: {error}</p>
+          <Button onClick={() => window.location.reload()}>{t('common.retry')}</Button>
         </div>
       </div>
     );
@@ -103,13 +105,13 @@ export default function ServerList() {
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="Servers" 
-        description="Manage physical servers across datacenters"
+        title={t('servers.title')} 
+        description={t('servers.description')}
         icon={<Server className="h-6 w-6" />}
         actions={
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Server
+            {t('servers.addServer')}
           </Button>
         }
       />
@@ -118,9 +120,9 @@ export default function ServerList() {
         data={servers}
         columns={columns}
         searchKeys={['hostname', 'serialNumber', 'model']}
-        searchPlaceholder="Search by hostname, serial, or model..."
+        searchPlaceholder={t('servers.searchPlaceholder')}
         onRowClick={(srv) => navigate(`/servers/${srv.id}`)}
-        emptyMessage={loading ? "Loading..." : "No servers found"}
+        emptyMessage={loading ? t('common.loading') : t('servers.emptyMessage')}
       />
     </div>
   );

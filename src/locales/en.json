@@ -21,7 +21,33 @@
     "type": "Type",
     "location": "Location",
     "noData": "No data",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "retry": "Retry",
+    "add": "Add",
+    "model": "Model",
+    "serialNumber": "Serial #",
+    "created": "Created",
+    "lastUpdated": "Last Updated",
+    "online": "Online",
+    "offline": "Offline",
+    "maintenance": "Maintenance",
+    "statistics": "Statistics",
+    "assignedPersons": "Assigned Persons",
+    "noPersonsAssigned": "No persons assigned",
+    "backTo": "Back to",
+    "notFoundMessage": "Not found",
+    "pageNotFound": "Page not found",
+    "returnHome": "Return to Home",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "department": "Department",
+    "assignments": "Assignments",
+    "resources": "Resources",
+    "allocation": "Allocation",
+    "eolDate": "EOL Date",
+    "hostname": "Hostname",
+    "os": "OS"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -57,7 +83,12 @@
     "location": "Location",
     "servers": "Servers",
     "totalServers": "Total Servers",
-    "noServers": "No servers in this datacenter"
+    "noServers": "No servers in this datacenter",
+    "description": "Manage your datacenter facilities",
+    "addDatacenter": "Add Datacenter",
+    "searchPlaceholder": "Search datacenters...",
+    "emptyMessage": "No datacenters found",
+    "backToDatacenters": "Back to Datacenters"
   },
   "servers": {
     "title": "Servers",
@@ -72,7 +103,12 @@
     "status": "Status",
     "online": "Online",
     "offline": "Offline",
-    "maintenance": "Maintenance"
+    "maintenance": "Maintenance",
+    "description": "Manage physical servers across datacenters",
+    "addServer": "Add Server",
+    "searchPlaceholder": "Search by hostname, serial, or model...",
+    "emptyMessage": "No servers found",
+    "hosts": "Hosts"
   },
   "hosts": {
     "title": "Hosts / VMs",
@@ -86,7 +122,12 @@
     "status": "Status",
     "running": "Running",
     "stopped": "Stopped",
-    "suspended": "Suspended"
+    "suspended": "Suspended",
+    "description": "Manage virtual machines and containers",
+    "addHost": "Add Host",
+    "searchPlaceholder": "Search by hostname...",
+    "emptyMessage": "No hosts found",
+    "ipAddresses": "IP Addresses"
   },
   "ipAddresses": {
     "title": "IP Addresses",
@@ -98,7 +139,11 @@
     "address": "IP Address",
     "host": "Host",
     "assigned": "Assigned",
-    "available": "Available"
+    "available": "Available",
+    "description": "Manage IP address allocations",
+    "addIPAddress": "Add IP Address",
+    "searchPlaceholder": "Search by IP address...",
+    "emptyMessage": "No IP addresses found"
   },
   "operatingSystems": {
     "title": "Operating Systems",
@@ -109,7 +154,12 @@
     "delete": "Delete Operating System",
     "name": "Name",
     "version": "Version",
-    "vendor": "Vendor"
+    "vendor": "Vendor",
+    "description": "Manage operating system types",
+    "addOS": "Add OS",
+    "searchPlaceholder": "Search by name, version, or vendor...",
+    "emptyMessage": "No operating systems found",
+    "hosts": "Hosts"
   },
   "persons": {
     "title": "Persons",
@@ -122,11 +172,20 @@
     "lastName": "Last Name",
     "email": "Email",
     "phone": "Phone",
-    "role": "Role"
+    "role": "Role",
+    "description": "Manage people and their roles",
+    "addPerson": "Add Person",
+    "searchPlaceholder": "Search by name, email, role, or department...",
+    "emptyMessage": "No persons found"
   },
   "language": {
     "switch": "Switch Language",
     "russian": "Русский",
     "english": "English"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Oops! Page not found",
+    "returnHome": "Return to Home"
   }
 }

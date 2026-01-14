@@ -6,8 +6,10 @@ import { DataTable, Column } from '@/components/ui/DataTable';
 import { Button } from '@/components/ui/button';
 import { personApi, assignmentApi } from '@/services/api';
 import { Person, Assignment } from '@/types/cmdb';
+import { useTranslation } from 'react-i18next';
 
 export default function PersonList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [persons, setPersons] = useState<Person[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -39,7 +41,7 @@ export default function PersonList() {
   const columns: Column<Person>[] = [
     { 
       key: 'name', 
-      header: 'Name', 
+      header: t('common.name'), 
       sortable: true,
       render: (p) => (
         <span className="font-medium text-foreground">{p.name}</span>
@@ -47,7 +49,7 @@ export default function PersonList() {
     },
     { 
       key: 'email', 
-      header: 'Email',
+      header: t('common.email'),
       render: (p) => (
         <div className="flex items-center gap-1 text-muted-foreground">
           <Mail className="h-3 w-3" />
@@ -55,11 +57,11 @@ export default function PersonList() {
         </div>
       )
     },
-    { key: 'role', header: 'Role', sortable: true },
-    { key: 'department', header: 'Department', sortable: true },
+    { key: 'role', header: t('common.role'), sortable: true },
+    { key: 'department', header: t('common.department'), sortable: true },
     { 
       key: 'phone', 
-      header: 'Phone',
+      header: t('common.phone'),
       render: (p) => p.phone ? (
         <div className="flex items-center gap-1 text-muted-foreground">
           <Phone className="h-3 w-3" />
@@ -69,7 +71,7 @@ export default function PersonList() {
     },
     { 
       key: 'assignments', 
-      header: 'Assignments',
+      header: t('common.assignments'),
       render: (p) => {
         const personAssignments = assignments.filter(a => a.personId === p.id);
         return <span className="text-muted-foreground">{personAssignments.length}</span>;
@@ -81,13 +83,13 @@ export default function PersonList() {
     return (
       <div className="animate-fade-in">
         <PageHeader 
-          title="Persons" 
-          description="Manage people and their roles"
+          title={t('persons.title')} 
+          description={t('persons.description')}
           icon={<Users className="h-6 w-6" />}
         />
         <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <p className="text-destructive">Error: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="text-destructive">{t('common.error')}: {error}</p>
+          <Button onClick={() => window.location.reload()}>{t('common.retry')}</Button>
         </div>
       </div>
     );
@@ -96,13 +98,13 @@ export default function PersonList() {
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="Persons" 
-        description="Manage people and their roles"
+        title={t('persons.title')} 
+        description={t('persons.description')}
         icon={<Users className="h-6 w-6" />}
         actions={
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Person
+            {t('persons.addPerson')}
           </Button>
         }
       />
@@ -111,9 +113,9 @@ export default function PersonList() {
         data={persons}
         columns={columns}
         searchKeys={['name', 'email', 'role', 'department']}
-        searchPlaceholder="Search by name, email, role, or department..."
+        searchPlaceholder={t('persons.searchPlaceholder')}
         onRowClick={(p) => navigate(`/persons/${p.id}`)}
-        emptyMessage={loading ? "Loading..." : "No persons found"}
+        emptyMessage={loading ? t('common.loading') : t('persons.emptyMessage')}
       />
     </div>
   );

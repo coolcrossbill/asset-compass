@@ -8,8 +8,10 @@ import { EntityLink } from '@/components/ui/EntityLink';
 import { Button } from '@/components/ui/button';
 import { hostApi, serverApi, osApi, ipAddressApi } from '@/services/api';
 import { Host, Server, OperatingSystem, IPAddress } from '@/types/cmdb';
+import { useTranslation } from 'react-i18next';
 
 export default function HostList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [hosts, setHosts] = useState<Host[]>([]);
   const [servers, setServers] = useState<Server[]>([]);
@@ -47,7 +49,7 @@ export default function HostList() {
   const columns: Column<Host>[] = [
     { 
       key: 'hostname', 
-      header: 'Hostname', 
+      header: t('common.hostname'), 
       sortable: true,
       render: (h) => (
         <span className="font-medium font-mono text-foreground">{h.hostname}</span>
@@ -55,7 +57,7 @@ export default function HostList() {
     },
     { 
       key: 'serverHostname', 
-      header: 'Server',
+      header: t('hosts.server'),
       render: (h) => {
         const server = servers.find(s => s.id === h.serverId);
         return (
@@ -67,12 +69,12 @@ export default function HostList() {
     },
     { 
       key: 'type', 
-      header: 'Type',
+      header: t('common.type'),
       render: (h) => <StatusBadge status={h.type} />
     },
     { 
       key: 'osName', 
-      header: 'OS',
+      header: t('common.os'),
       render: (h) => {
         const os = operatingSystems.find(o => o.id === h.osId);
         return h.osId && os ? (
@@ -82,14 +84,14 @@ export default function HostList() {
     },
     { 
       key: 'resources', 
-      header: 'Resources',
+      header: t('common.resources'),
       render: (h) => (
         <span className="text-muted-foreground">{h.cpu} vCPU • {h.memoryGb} GB</span>
       )
     },
     { 
       key: 'ips', 
-      header: 'IP Addresses',
+      header: t('hosts.ipAddresses'),
       render: (h) => {
         const hostIps = ipAddresses.filter(ip => ip.hostId === h.id);
         return hostIps.length > 0 ? (
@@ -101,7 +103,7 @@ export default function HostList() {
     },
     { 
       key: 'status', 
-      header: 'Status', 
+      header: t('common.status'), 
       sortable: true,
       render: (h) => <StatusBadge status={h.status} />
     },
@@ -111,13 +113,13 @@ export default function HostList() {
     return (
       <div className="animate-fade-in">
         <PageHeader 
-          title="Hosts / VMs" 
-          description="Manage virtual machines and containers"
+          title={t('hosts.title')} 
+          description={t('hosts.description')}
           icon={<Monitor className="h-6 w-6" />}
         />
         <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <p className="text-destructive">Error: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="text-destructive">{t('common.error')}: {error}</p>
+          <Button onClick={() => window.location.reload()}>{t('common.retry')}</Button>
         </div>
       </div>
     );
@@ -126,13 +128,13 @@ export default function HostList() {
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="Hosts / VMs" 
-        description="Manage virtual machines and containers"
+        title={t('hosts.title')} 
+        description={t('hosts.description')}
         icon={<Monitor className="h-6 w-6" />}
         actions={
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Host
+            {t('hosts.addHost')}
           </Button>
         }
       />
@@ -141,9 +143,9 @@ export default function HostList() {
         data={hosts}
         columns={columns}
         searchKeys={['hostname']}
-        searchPlaceholder="Search by hostname..."
+        searchPlaceholder={t('hosts.searchPlaceholder')}
         onRowClick={(h) => navigate(`/hosts/${h.id}`)}
-        emptyMessage={loading ? "Loading..." : "No hosts found"}
+        emptyMessage={loading ? t('common.loading') : t('hosts.emptyMessage')}
       />
     </div>
   );

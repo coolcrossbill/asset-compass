@@ -8,8 +8,10 @@ import { EntityLink } from '@/components/ui/EntityLink';
 import { Button } from '@/components/ui/button';
 import { ipAddressApi, hostApi } from '@/services/api';
 import { IPAddress, Host } from '@/types/cmdb';
+import { useTranslation } from 'react-i18next';
 
 export default function IPList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [ipAddresses, setIpAddresses] = useState<IPAddress[]>([]);
   const [hosts, setHosts] = useState<Host[]>([]);
@@ -41,7 +43,7 @@ export default function IPList() {
   const columns: Column<IPAddress>[] = [
     { 
       key: 'address', 
-      header: 'IP Address', 
+      header: t('ipAddresses.address'), 
       sortable: true,
       render: (ip) => (
         <span className="font-medium font-mono text-foreground">{ip.address}</span>
@@ -49,7 +51,7 @@ export default function IPList() {
     },
     { 
       key: 'hostHostname', 
-      header: 'Host',
+      header: t('ipAddresses.host'),
       render: (ip) => {
         const host = hosts.find(h => h.id === ip.hostId);
         return ip.hostId && host ? (
@@ -59,12 +61,12 @@ export default function IPList() {
     },
     { 
       key: 'type', 
-      header: 'Type',
+      header: t('common.type'),
       render: (ip) => <StatusBadge status={ip.type} />
     },
     { 
       key: 'allocation', 
-      header: 'Allocation', 
+      header: t('common.allocation'), 
       sortable: true,
       render: (ip) => <StatusBadge status={ip.allocation} />
     },
@@ -74,13 +76,13 @@ export default function IPList() {
     return (
       <div className="animate-fade-in">
         <PageHeader 
-          title="IP Addresses" 
-          description="Manage IP address allocations"
+          title={t('ipAddresses.title')} 
+          description={t('ipAddresses.description')}
           icon={<Network className="h-6 w-6" />}
         />
         <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <p className="text-destructive">Error: {error}</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="text-destructive">{t('common.error')}: {error}</p>
+          <Button onClick={() => window.location.reload()}>{t('common.retry')}</Button>
         </div>
       </div>
     );
@@ -89,13 +91,13 @@ export default function IPList() {
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="IP Addresses" 
-        description="Manage IP address allocations"
+        title={t('ipAddresses.title')} 
+        description={t('ipAddresses.description')}
         icon={<Network className="h-6 w-6" />}
         actions={
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
-            Add IP Address
+            {t('ipAddresses.addIPAddress')}
           </Button>
         }
       />
@@ -104,9 +106,9 @@ export default function IPList() {
         data={ipAddresses}
         columns={columns}
         searchKeys={['address']}
-        searchPlaceholder="Search by IP address..."
+        searchPlaceholder={t('ipAddresses.searchPlaceholder')}
         onRowClick={(ip) => navigate(`/ips/${ip.id}`)}
-        emptyMessage={loading ? "Loading..." : "No IP addresses found"}
+        emptyMessage={loading ? t('common.loading') : t('ipAddresses.emptyMessage')}
       />
     </div>
   );
