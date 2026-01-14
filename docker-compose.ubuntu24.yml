@@ -39,13 +39,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
     container_name: asset-compass-app
     ports:
       - "3000:80"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - VITE_API_URL=http://localhost:8000
     depends_on:
       - backend
 

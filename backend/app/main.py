@@ -9,9 +9,10 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Asset Compass API", version="1.0.0")
 
 # Configure CORS
+# Allow same-domain, different-port requests (localhost or 127.0.0.1 with any port)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8080"],
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
