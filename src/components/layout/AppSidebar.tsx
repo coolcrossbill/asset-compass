@@ -14,20 +14,23 @@ import {
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
-const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Datacenters', href: '/datacenters', icon: Building2 },
-  { name: 'Servers', href: '/servers', icon: Server },
-  { name: 'Hosts / VMs', href: '/hosts', icon: Monitor },
-  { name: 'IP Addresses', href: '/ips', icon: Network },
-  { name: 'Operating Systems', href: '/os', icon: HardDrive },
-  { name: 'Persons', href: '/persons', icon: Users },
+const getNavigation = (t: (key: string) => string) => [
+  { name: t('navigation.dashboard'), href: '/', icon: LayoutDashboard },
+  { name: t('navigation.datacenters'), href: '/datacenters', icon: Building2 },
+  { name: t('navigation.servers'), href: '/servers', icon: Server },
+  { name: t('navigation.hosts'), href: '/hosts', icon: Monitor },
+  { name: t('navigation.ipAddresses'), href: '/ips', icon: Network },
+  { name: t('navigation.operatingSystems'), href: '/os', icon: HardDrive },
+  { name: t('navigation.persons'), href: '/persons', icon: Users },
 ];
 
 export function AppSidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const { t } = useTranslation();
+  const navigation = getNavigation(t);
 
   return (
     <aside 
@@ -92,7 +95,7 @@ export function AppSidebar() {
           ) : (
             <>
               <ChevronLeft className="h-4 w-4 mr-2" />
-              <span>Collapse</span>
+              <span>{t('common.collapse')}</span>
             </>
           )}
         </Button>

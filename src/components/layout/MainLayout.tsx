@@ -3,12 +3,16 @@ import { AppSidebar } from './AppSidebar';
 import { Search, Bell, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
       <AppSidebar />
@@ -20,13 +24,14 @@ export function MainLayout({ children }: MainLayoutProps) {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input 
-                placeholder="Search assets..." 
+                placeholder={t('common.searchPlaceholder')} 
                 className="pl-10 bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
               <Bell className="h-5 w-5" />
             </Button>

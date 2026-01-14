@@ -6,8 +6,10 @@ import { EntityLink } from '@/components/ui/EntityLink';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { datacenterApi, serverApi, hostApi, ipAddressApi, osApi, personApi } from '@/services/api';
 import type { Datacenter, Server as ServerType, Host, IPAddress, OperatingSystem, Person } from '@/types/cmdb';
+import { useTranslation } from 'react-i18next';
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const [datacenters, setDatacenters] = useState<Datacenter[]>([]);
   const [servers, setServers] = useState<ServerType[]>([]);
   const [hosts, setHosts] = useState<Host[]>([]);
@@ -59,12 +61,12 @@ export default function Dashboard() {
     return (
       <div className="animate-fade-in">
         <PageHeader 
-          title="Dashboard" 
-          description="Overview of your IT infrastructure"
+          title={t('dashboard.title')} 
+          description={t('dashboard.quickStats')}
           icon={<LayoutDashboard className="h-6 w-6" />}
         />
         <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Loading dashboard...</p>
+          <p className="text-muted-foreground">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -73,40 +75,40 @@ export default function Dashboard() {
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="Dashboard" 
-        description="Overview of your IT infrastructure"
+        title={t('dashboard.title')} 
+        description={t('dashboard.quickStats')}
         icon={<LayoutDashboard className="h-6 w-6" />}
       />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 mb-8">
         <StatsCard 
-          title="Datacenters" 
+          title={t('dashboard.totalDatacenters')} 
           value={datacenters.length} 
           icon={<Building2 className="h-5 w-5" />}
         />
         <StatsCard 
-          title="Servers" 
+          title={t('dashboard.onlineServers')} 
           value={`${onlineServers}/${servers.length}`} 
           icon={<Server className="h-5 w-5" />}
         />
         <StatsCard 
-          title="Hosts / VMs" 
+          title={t('dashboard.runningHosts')} 
           value={`${runningHosts}/${hosts.length}`} 
           icon={<Monitor className="h-5 w-5" />}
         />
         <StatsCard 
-          title="IP Addresses" 
+          title={t('dashboard.assignedIPs')} 
           value={`${assignedIps}/${ipAddresses.length}`} 
           icon={<Network className="h-5 w-5" />}
         />
         <StatsCard 
-          title="Operating Systems" 
+          title={t('dashboard.totalOperatingSystems')} 
           value={operatingSystems.length} 
           icon={<HardDrive className="h-5 w-5" />}
         />
         <StatsCard 
-          title="Persons" 
+          title={t('dashboard.totalPersons')} 
           value={persons.length} 
           icon={<Users className="h-5 w-5" />}
         />
@@ -117,7 +119,7 @@ export default function Dashboard() {
         <div className="rounded-xl border border-border bg-card p-5 card-shadow">
           <div className="flex items-center gap-2 mb-4">
             <Activity className="h-5 w-5 text-primary" />
-            <h2 className="font-semibold text-foreground">Recent Activity</h2>
+            <h2 className="font-semibold text-foreground">{t('dashboard.recentActivity')}</h2>
           </div>
           <div className="space-y-3">
             {recentActivity.map((item, i) => (
@@ -137,31 +139,31 @@ export default function Dashboard() {
 
         {/* Quick Links */}
         <div className="rounded-xl border border-border bg-card p-5 card-shadow">
-          <h2 className="font-semibold text-foreground mb-4">Quick Links</h2>
+          <h2 className="font-semibold text-foreground mb-4">{t('dashboard.quickStats')}</h2>
           <div className="grid grid-cols-2 gap-3">
             <EntityLink to="/datacenters" className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors no-underline hover:no-underline">
               <Building2 className="h-5 w-5 text-primary" />
-              <span className="text-foreground">Datacenters</span>
+              <span className="text-foreground">{t('navigation.datacenters')}</span>
             </EntityLink>
             <EntityLink to="/servers" className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors no-underline hover:no-underline">
               <Server className="h-5 w-5 text-primary" />
-              <span className="text-foreground">Servers</span>
+              <span className="text-foreground">{t('navigation.servers')}</span>
             </EntityLink>
             <EntityLink to="/hosts" className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors no-underline hover:no-underline">
               <Monitor className="h-5 w-5 text-primary" />
-              <span className="text-foreground">Hosts / VMs</span>
+              <span className="text-foreground">{t('navigation.hosts')}</span>
             </EntityLink>
             <EntityLink to="/ips" className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors no-underline hover:no-underline">
               <Network className="h-5 w-5 text-primary" />
-              <span className="text-foreground">IP Addresses</span>
+              <span className="text-foreground">{t('navigation.ipAddresses')}</span>
             </EntityLink>
             <EntityLink to="/os" className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors no-underline hover:no-underline">
               <HardDrive className="h-5 w-5 text-primary" />
-              <span className="text-foreground">Operating Systems</span>
+              <span className="text-foreground">{t('navigation.operatingSystems')}</span>
             </EntityLink>
             <EntityLink to="/persons" className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors no-underline hover:no-underline">
               <Users className="h-5 w-5 text-primary" />
-              <span className="text-foreground">Persons</span>
+              <span className="text-foreground">{t('navigation.persons')}</span>
             </EntityLink>
           </div>
         </div>
