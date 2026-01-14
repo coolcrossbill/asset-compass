@@ -28,6 +28,7 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://assetcompass:assetcompass@postgres:5432/assetcompass
+      - CORS_ORIGINS=http://127.0.0.1:3000,http://localhost:3000
     depends_on:
       postgres:
         condition: service_healthy
